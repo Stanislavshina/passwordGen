@@ -80,3 +80,9 @@ output{
   box-shadow: 0 0 2px #222;
 }
 
+section{
+  display: flex;
+  flex-direction: column;
+  
+}
+
