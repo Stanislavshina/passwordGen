@@ -100,7 +100,17 @@ button{
 ol {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 7px;
   margin-top: 10px;
+  max-width: 100%;
+  width: 100%;
+}
+
+h1{
+  text-align: center;
+  font-size: 22px;
+  color: teal;
+  margin-bottom: 20px;
+  text-transform: uppercase;
 }

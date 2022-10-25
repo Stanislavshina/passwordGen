@@ -26,14 +26,17 @@ const setChars = () => {
   if(low.checked) arr.push(lowLetter);
   if(digit.checked) arr.push(digitArr);
   if(symbol.checked) arr.push(symbolArr);
-  arr = arr.flat(Infinity);
-  // console.log(arr);
-  return arr;
+  return arr.flat(Infinity) 
 };
+
+const validateForm = () => {
+   resultSection.innerHTML = 'Вы должны отметить хоть что-то';
+   resultSection.style.color = 'red';
+}
 
 const getRandomSymbol = () => {
   const symbol = setChars();
-  const r = Math.round(Math.random()*(symbol.length-1));
+  const r = Math.round(Math.random()*(symbol.length - 1));
   const random = symbol[r];
   // console.log(`symbol length: ${symbol.length}`);
   // console.log(r);
@@ -47,7 +50,8 @@ const generatePassword = () => {
     const randomSymbol = getRandomSymbol();
     password += randomSymbol;
   };
-  // console.log(und.test(password));
+  console.log(password);
+  console.log(password.length);
   return password
 }
 
@@ -76,6 +80,7 @@ const render = () => {
   }
   console.log(resultSection);
   createPasswords();
+  resultSection.style.color = 'inherit';
   passwords.forEach((password) => {
     return resultSection.innerHTML += `<li>
     ${password} 
@@ -84,9 +89,11 @@ const render = () => {
   return passwords.splice(0)
 };
 
-
 updateValue();
-btn.addEventListener('click', render);
+btn.addEventListener('click', () => {
+  if(capital.checked || low.checked || digit.checked || symbol.checked ) return render();
+  validateForm();
+});
 
 
 
