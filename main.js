@@ -6,7 +6,7 @@ const range = document.querySelector('#range__slider'),
       low = document.querySelector('#low'),
       digit = document.querySelector('#digit'),
       symbol = document.querySelector('#symbol'),
-      resultSection = document.querySelector('section'),
+      resultSection = document.querySelector('ol'),
       btn = document.querySelector('BUTTON'),
       passwords = [],
       capitalLetter = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
@@ -18,61 +18,75 @@ capital.checked = true;
 digit.checked = true;
 low.checked = true;
 
-const outputUpdate = (vol) => {
-  output.value = vol;
-  output.style.left= range.value + 'px';
-};
+// console.dir(range)
 
-const charset = () => {
-  const arr = [];
+const setChars = () => {
+  let arr = [];
   if(capital.checked) arr.push(capitalLetter);
   if(low.checked) arr.push(lowLetter);
   if(digit.checked) arr.push(digitArr);
   if(symbol.checked) arr.push(symbolArr);
-  return arr.flat(Infinity);
+  arr = arr.flat(Infinity);
+  // console.log(arr);
+  return arr;
 };
 
-const randomSymbol = () => {
-  const symbol = charset();
-  return symbol[Math.round(Math.random()*symbol.length)]
-}
+const getRandomSymbol = () => {
+  const symbol = setChars();
+  const r = Math.round(Math.random()*(symbol.length-1));
+  const random = symbol[r];
+  // console.log(`symbol length: ${symbol.length}`);
+  // console.log(r);
+  return random;
+};
 
-const createPass = (length) => {
+const generatePassword = () => {
   let password = '';
-  for (let i = passwords.length; i < 5; i++) {
-    for(let j = 0; j < length; j++){
-      if(j.length === length) return passwords.push(password);
-      j === 0 ? password += randomSymbol() : 
-      password[j] === password[j-1] ? sliceJ(j) : password += randomSymbol();
-
-    }
-    passwords.push(password);
-    password = '';
-  }
-  function sliceJ(x) {
-    password.slice(x)
-    return x--
-  }
-  return passwords;
+  const passwordLength = output.value;
+  for(let i = 0; i < passwordLength; i++){
+    const randomSymbol = getRandomSymbol();
+    password += randomSymbol;
+  };
+  // console.log(und.test(password));
+  return password
 }
 
-const renderPass = () => {
-  createPass(output.value);
-  resultSection.innerHTML = '';
+// console.log(generatePassword());
+
+// const a = 'abcdea';
+// console.log(a);
+// console.log(a.replace(/a/gi, getRandomSymbol()));
+
+const createPasswords = () => { 
+  for(let i = 0; i < 5; i++) {
+    const passwordChar = generatePassword();
+    passwords.push(passwordChar);
+  };
+};
+
+const updateValue = () => {
+  range.addEventListener('input', ()=>{
+    output.value = range.value;
+  });
+}
+
+const render = () => {
+  while(resultSection.firstChild){
+    resultSection.removeChild(resultSection.firstChild)
+  }
   console.log(resultSection);
-  passwords.forEach(el=>{
-   return resultSection.innerHTML += el + ' '
+  createPasswords();
+  passwords.forEach((password) => {
+    return resultSection.innerHTML += `<li>
+    ${password} 
+    </li>`
   })
   return passwords.splice(0)
-}
+};
 
-console.log(btn);
-btn.addEventListener('click', ()=>{
-  renderPass()
-  console.log(passwords);
-});
+
+updateValue();
+btn.addEventListener('click', render);
 
 
 
-
-range.addEventListener('input', ()=>outputUpdate(range.value));
